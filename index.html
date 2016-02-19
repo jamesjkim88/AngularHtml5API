@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div.cont{
+            background-color: green;
+        }
+
+        div.one{
+            background-color: blue;
+            height: 100px;
+            width: 100px;
+        }
+
+        div.two{
+            background-color: red;
+            height: 100px;
+            width: 100px;
+        }
+
+        .left{
+            float: left;
+        }
+
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="cont clearfix">
+        <div class="left one"></div>
+        <div class="left two"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular prac</title>
+    <link rel="stylesheet" href="base.css">
+    <style>
+
+        div{
+            height: 300px;
+            width: 300px;
+            border: 1px solid black;
+            margin: 15px;
+        }
+
+    </style>
+    <script src="bower_components/angular/angular.js"></script>
+    <script>
+
+        var app = angular.module("app", []);
+
+        app.controller("controller1", function($rootScope, $scope){
+            var num = 0;
+            $scope.click = function(){
+                num++;
+                $rootScope.$emit("evtName", num);
+            };
+        });
+
+        app.controller("controller2", function($rootScope, $scope){
+
+            $rootScope.$on("evtName", function(event,data){
+                console.log(data);
+                $scope.model = "hello " + data;
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div ng-controller="controller1"><button ng-click="click()">Click</button></div>
+    <div ng-controller="controller2"><input type="text" ng-model="model"></div>
+</body>
+</html>

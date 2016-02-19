@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>angular directive</title>
+    <script src="bower_components/angular/angular.js"></script>
+    <script>
+
+        var app = angular.module("app", []);
+
+        app.controller("mainCtrl", function($scope){
+            $scope.message = "Hello";
+        })
+
+        app.directive("hello", function(){
+            return{
+                scope: false //default setting for scope prop... means directive scope === rootScope trueuu
+                link: function(scope, element, attrs){
+
+                }
+            }
+        })
+
+    </script>
+</head>
+<body>
+    <div ng-controller="mainCtrl">{{message}}</div>
+</body>
+</html>

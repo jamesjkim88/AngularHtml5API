@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local Storage</title>
+    <link rel="stylesheet" href="base.css">
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var inpValue = document.querySelector("#value");
+            var inpKey = document.querySelector("#key");
+
+            function handler() {
+                localStorage.setItem(inpKey.value, inpValue.value);
+            }
+
+            inpKey.addEventListener("change", handler)
+            inpValue.addEventListener("change", handler);
+
+            document.querySelector("button").addEventListener("click", function(){
+                for(var i = 0; i<localStorage.length; i++){
+                    var key = localStorage.key(i);
+                    var value = localStorage[key];
+                    console.log(key + ":", value)
+                }
+            })
+
+        })
+
+    </script>
+</head>
+<body>
+
+<input type="text" id="key">
+<input type="text" id="value">
+<button>Click</button>
+</body>
+</html>

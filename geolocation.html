@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="base.css">
+    <script src="bower_components/angular/angular.js"></script>
+    <script>
+
+        var app = angular.module('myApp', []).controller('MyController', function ($scope) {
+            $scope.message = 'Hello';
+        });
+        app.directive('address', function (MapLoad, Geo, Geocode, $q) {
+            return {
+                templateUrl: '_address.html',
+                scope: {
+                },
+                link: function (scope) {
+                    scope.state = 'California';
+                    $q.all([MapLoad, Geo.get()]).then(function (results) {
+                        var c = results[1].coords;
+                        console.log('loaded geo and google script ... ', c.latitude, c.longitude);
+                        Geocode(c.latitude, c.longitude).then(function (results) {
+                            console.log(results);
+                        }, function (status) {
+                            console.log(status);
+                        });
+                    }, function () {
+                        console.log('failed to load geo and google script ', arguments);
+                    });
+                    /*MapLoad.then(function () {
+                     console.log('Google script has loaded now ... ');
+                     Geo.get().then(function (position) {
+                     var c = position.coords;
+                     Geocode(c.latitude, c.longitude).then(function (data) {
+                     console.log(data);
+                     }, function (status) {
+                     console.log(status);
+                     });
+                     }, function () {
+                     console.log(arguments);
+                     });
+                     });*/
+                }
+            };
+        });
+        app.factory('MapLoad', function ($q) {
+            // a service that returns a promise that returns true after
+            // google script has loaded
+            var deferred = $q.defer();
+            window.initMap = function () {
+                // this will be invoked by google code after the script has loaded
+                deferred.resolve('google map is loaded ... ');
+            };
+            return deferred.promise;
+        });
+        app.factory('Geo', function ($q) {
+            return {
+                get: function () {
+                    return $q(function (resolve, reject) {
+                        console.log('getting position ... ');
+                        navigator.geolocation.getCurrentPosition(function (coords) {
+                            resolve(coords);
+                        }, function () {
+                            reject(arguments);
+                        }, {
+                            enableHighAccuracy: true,
+                            /*timeout: 10000,*/
+                            maximumAge: 5000
+                        });
+                    });
+                }
+            }
+        });
+        app.factory('Geocode', function ($q) {
+            function sanitizeAddress(address) {
+                // address will be the google formatted address (first)
+            }
+            return function (lat, lng) {
+                console.log(lat, lng);
+                var latlng = {
+                    'location': {
+                        'lat': lat,
+                        'lng': lng
+                    }
+                };
+                console.log(latlng);
+                return $q(function (resolve, reject) {
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode(latlng, function (status, results) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            resolve(results);
+                        } else {
+                            reject(status);
+                        }
+                    });
+                });
+            };
+        });
+
+
+
+
+
+    </script>
+
+
+</head>
+<body>
+
+<div address></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN2Id-IlNrvGQYqgqRD6a5hCSm0o3-G08&signed_in=true&callback=initMap"
+        async defer></script>
+</body>
+</html>
